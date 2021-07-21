@@ -26,11 +26,11 @@ const list_items = [
 const list = document.getElementById('list');
 const page = document.getElementById('pagination');
 
-let current_page = 2;
+let current_page = 1;
 let row = 5;
 
 const displayList = (items, wrapper, rows_per_page, page) => {
-     wrapper.innerText = '';
+     wrapper.innerHTML = '';
      page--;
 
      let start = page * rows_per_page;
@@ -40,9 +40,43 @@ const displayList = (items, wrapper, rows_per_page, page) => {
 
      for(let i = 0 ; i < paginatedItem.length; i++) {
        const div = document.createElement('div');
+       div.classList.add('item');
        div.innerText = paginatedItem[i];
        wrapper.append(div);
      }
 }
 
+const displayButton = (items, wrapper, rows_per_page, page) => {
+     wrapper.innerHTML = '';
+
+     let btn = Math.ceil(items.length / rows_per_page);
+     
+     for(let i = 1; i < btn + 1; i++) {
+        const button = paginationButton(i, items);
+        wrapper.append(button);
+     }
+     
+}
+
+const paginationButton = (page, items) => {
+     let button = document.createElement('button');
+     button.innerText = page;
+
+     if(current_page == page) {
+         button.classList.add('active');
+     } 
+
+     button.addEventListener('click', () => {
+         current_page = page;
+         displayList(items, list, row, current_page);
+
+         let current_btn = document.querySelector('.pageNumber button.active');
+         current_btn.classList.remove('active');
+
+         button.classList.add('active');
+     })
+     return button;
+}
+
 displayList(list_items, list, row, current_page);
+displayButton(list_items, list, row, current_page);
